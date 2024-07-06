@@ -17,7 +17,8 @@ exports.getEditProduct = (req, res, next) => {
   if(!editMode){
     res.redirect('/')
   }
-  Product.fetchProduct(productId,(product)=>{
+  
+  Product.fetchProduct(productId).then(([product,field])=>{
 
     res.render('admin/edit-product', {
       pageTitle: 'Edit Product',
@@ -40,7 +41,9 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
+
+  Product.fetchAll().then(([products,fields]) => {
+    console.log(products)
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
@@ -62,7 +65,8 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const id=req.params.productId
-  Product.removeProduct(id,()=>{
+  
+  Product.removeProduct(Number(id)).then(([products,fields])=>{
     res.redirect('/admin/products')
   });
 
